@@ -39,6 +39,7 @@ public class RewardsServiceTest {
 	public final static double LATITUDE_ATTRACTION_ONE = 0.31;
 	public final static double LONGITUDE_ATTRACTION_ONE = -0.00032;
 	private static User user;
+	private UUID nullId = new UUID(0,0);
 
 	@Before
 	public void prepareUser() {
@@ -48,8 +49,8 @@ public class RewardsServiceTest {
 	@Test
 	public void givenPrerequisitesToAdd1RewardOk_whenAddAllNewRewards_thenAddsCorrectReward() {
 		// MOCK rewardCentral
-		AttractionData expectedAttraction = new AttractionData("attraction_name", "attraction_city", "attraction_state", 0.31, -0.32);
-		AttractionData tooFarAttraction = new AttractionData("far_name", "far_city", "far_state", 99, -99);
+		AttractionData expectedAttraction = new AttractionData(nullId, "attraction_name", "attraction_city", "attraction_state", 0.31, -0.32);
+		AttractionData tooFarAttraction = new AttractionData(nullId, "far_name", "far_city", "far_state", 99, -99);
 		when(rewardCentral.getAttractionRewardPoints(eq(expectedAttraction.id), eq(user.getUserId())))
 			.thenReturn(REWARD_POINTS_PER_ATTRACTION);
 		List<AttractionData> attractions = Arrays.asList(expectedAttraction, tooFarAttraction);
@@ -75,7 +76,7 @@ public class RewardsServiceTest {
 	@Test
 	public void givenTooFarToAddReward_whenAddAllNewRewards_thenAddsNoReward() {
 		// MOCK rewardCentral
-		AttractionData attraction = new AttractionData("attraction_name", "attraction_city", "attraction_state", 0.31, -0.32);
+		AttractionData attraction = new AttractionData(nullId, "attraction_name", "attraction_city", "attraction_state", 0.31, -0.32);
 		when(rewardCentral.getAttractionRewardPoints(eq(attraction.id), eq(user.getUserId())))
 			.thenReturn(REWARD_POINTS_PER_ATTRACTION);
 		List<AttractionData> attractions = Arrays.asList(attraction);
@@ -96,8 +97,8 @@ public class RewardsServiceTest {
 	@Test
 	public void givenAlreadyRewardedVisit_whenAddAllNewRewards_thenAddsNoReward() {
 		// MOCK rewardCentral
-		AttractionData expectedAttraction = new AttractionData("attraction_name", "attraction_city", "attraction_state", 0.31, -0.32);
-		AttractionData tooFarAttraction = new AttractionData("far_name", "far_city", "far_state", 99, -99);
+		AttractionData expectedAttraction = new AttractionData(nullId, "attraction_name", "attraction_city", "attraction_state", 0.31, -0.32);
+		AttractionData tooFarAttraction = new AttractionData(nullId, "far_name", "far_city", "far_state", 99, -99);
 		when(rewardCentral.getAttractionRewardPoints(eq(expectedAttraction.id), eq(user.getUserId())))
 			.thenReturn(999 + REWARD_POINTS_PER_ATTRACTION);
 		List<AttractionData> attractions = Arrays.asList(expectedAttraction, tooFarAttraction);
@@ -188,7 +189,7 @@ public class RewardsServiceTest {
 		List<AttractionData> attractions = new ArrayList<AttractionData>();	
 		for (int i=0; i<numberOfTestAttractions; i++) {
 			int index = numberOfTestAttractions - i;
-			AttractionData attraction = new AttractionData("name"+index, "city"+index, "state"+index, 
+			AttractionData attraction = new AttractionData(nullId, "name"+index, "city"+index, "state"+index, 
 					LATITUDE_ATTRACTION_ONE*index, LONGITUDE_ATTRACTION_ONE*index);	
 			attractions.add(attraction);
 		}
