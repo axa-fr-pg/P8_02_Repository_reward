@@ -30,13 +30,13 @@ public class RewardController {
 
 	@GetMapping("/sumOfAllRewardPoints")
 	public int sumOfAllRewardPoints(@RequestBody User user) {
-		logger.debug("getLastUserLocation for User " + user.getUserName());
+		logger.debug("getLastUserLocation for User " + user.userName);
 		return rewardService.sumOfAllRewardPoints(user);		
 	}
 
 	@GetMapping("/getRewardPoints")
 	public int getRewardPoints(@RequestBody UserAttraction userAttraction) {
-		logger.debug("getLastUserLocation for User " + userAttraction.user.getUserName()
+		logger.debug("getLastUserLocation for User " + userAttraction.user.userName
 		+ " and Attraction " + userAttraction.attraction.name);
 	return rewardService.getRewardPoints(userAttraction.attraction, userAttraction.user);
 	}

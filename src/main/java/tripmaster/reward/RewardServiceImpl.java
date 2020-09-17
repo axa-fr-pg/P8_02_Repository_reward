@@ -50,14 +50,14 @@ public class RewardServiceImpl implements RewardService {
 	
 	@Override
 	public int getRewardPoints(AttractionData attractionData, User user) {
-		logger.debug("getRewardPoints userName = " + user.getUserName() + " for attraction " + attractionData.name );
-		int points = rewardCentral.getAttractionRewardPoints(attractionData.id, user.getUserId());
+		logger.debug("getRewardPoints userName = " + user.userName + " for attraction " + attractionData.name );
+		int points = rewardCentral.getAttractionRewardPoints(attractionData.id, user.userId);
 		return points;
 	}
 	
 	@Override
 	public void addAllNewRewards(User user, List<AttractionData> attractions)	{
-		logger.debug("addAllNewRewards userName = " + user.getUserName() 
+		logger.debug("addAllNewRewards userName = " + user.userName 
 			+ " and attractionList of size " + attractions.size());
 		for(VisitedLocationData visitedLocation : user.getVisitedLocations()) {
 			for(AttractionData attractionData : attractions) {
@@ -66,7 +66,7 @@ public class RewardServiceImpl implements RewardService {
 						reward.attraction.name.equals(attractionData.name)).count();
 				if( numberOfRewardsOfTheUserForThisAttraction == 0) {
 					if(nearAttraction(visitedLocation, attractionData)) {
-						logger.debug("addAllNewRewards new Reward for userName = " + user.getUserName() + " for attraction " + attractionData.name );
+						logger.debug("addAllNewRewards new Reward for userName = " + user.userName + " for attraction " + attractionData.name );
 						user.addUserReward(new UserReward(visitedLocation, attractionData, getRewardPoints(attractionData, user)));
 					}
 				}
@@ -111,7 +111,7 @@ public class RewardServiceImpl implements RewardService {
 	
 	@Override
 	public int sumOfAllRewardPoints(User user) {
-		logger.debug("sumOfAllRewardPoints userName = " + user.getUserName()) ;
+		logger.debug("sumOfAllRewardPoints userName = " + user.userName) ;
 		int cumulativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.rewardPoints).sum();
 		return cumulativeRewardPoints;
 	}

@@ -32,3 +32,16 @@ dependencies {
     testCompile("junit:junit")
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.6.RELEASE'
 }
+
+apply plugin: "jacoco"
+jacoco {
+    toolVersion = "0.8.4"
+}
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+test.finalizedBy jacocoTestReport
