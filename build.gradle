@@ -26,7 +26,7 @@ repositories {
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    compile(group: 'tripmaster', name : 'common', version : "1.0")
+    compile(group: 'tripmaster', name : 'common', version : "1.0.0")
     compile(name:'RewardCentral', ext:'jar')
 
     testCompile("junit:junit")
@@ -45,3 +45,9 @@ jacocoTestReport {
     }
 }
 test.finalizedBy jacocoTestReport
+
+bootJar {
+    baseName = 'reward'
+    version =  '1.0.0'
+	mainClassName = 'tripmaster.reward.Application'
+}
