@@ -23,6 +23,11 @@ public class RewardController {
 	private Logger logger = LoggerFactory.getLogger(RewardController.class);
 	@Autowired private RewardService rewardService;
 	
+	/**
+	 * Adds new rewards to all users reward lists for each given attraction (if not already rewarded for a given user). 
+	 * @param attractionUserLists containing both the user list for which the rewards shall be added and the attraction list for which a reward shall be added (if not already done for a given user).
+	 * @return List of users updated with added rewards.
+	 */
 	@PatchMapping("/addAllNewRewardsAllUsers")
 	public List<User> addAllNewRewardsAllUsers(@RequestBody UserAttractionLists attractionUserLists) {
 		logger.debug("addAllNewRewardsAllUsers userListName of size = " + attractionUserLists.userList.size() 
@@ -30,12 +35,23 @@ public class RewardController {
 		return rewardService.addAllNewRewardsAllUsers(attractionUserLists.userList, attractionUserLists.attractionList);
 	}
 
+	/**
+	 * Calculates the number of reward points for a given user.
+	 * @param user for which the calculation shall be done.
+	 * @return int number of points.
+	 */
 	@GetMapping("/sumOfAllRewardPoints")
 	public int sumOfAllRewardPoints(@RequestBody User user) {
 		logger.debug("getLastUserLocation for User " + user.userName);
 		return rewardService.sumOfAllRewardPoints(user);		
 	}
 
+	/**
+	 * Gets the number of a reward points for a given attraction & user pair. 
+	 * @param userAttraction containing both the user and the attraction for which the points shall be calculated.
+	 * @return int number of points.
+	 * @see rewardCentral.getAttractionRewardPoints
+	 */
 	@GetMapping("/getRewardPoints")
 	public int getRewardPoints(@RequestBody UserAttraction userAttraction) {
 		logger.debug("getLastUserLocation for User " + userAttraction.user.userName

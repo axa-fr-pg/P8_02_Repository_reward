@@ -74,7 +74,7 @@ public class RewardServiceImpl implements RewardService {
 	 * Gets the number of a reward points for a given attraction & user pair. 
 	 * @param user for which the points shall be calculated
 	 * @param attractionData for which the points shall be calculated
-	 * @return boolean true if both locations have a distance lower or equal to the maximal proximity distance. False otherwise.
+	 * @return int number of points.
 	 * @see rewardCentral.getAttractionRewardPoints
 	 */
 	@Override
