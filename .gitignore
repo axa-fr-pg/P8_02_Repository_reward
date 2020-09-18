@@ -1,0 +1,16 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+*.html
+*.class
+*.log*
+*jacoco*
+*.xml
+*.css
+*.js
+*.MF
+*bin*
+*json*
+*tmp*
+*javadoc*
