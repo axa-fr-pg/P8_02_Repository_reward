@@ -14,7 +14,9 @@ import tripmaster.common.user.User;
 import tripmaster.common.user.UserAttraction;
 import tripmaster.common.user.UserAttractionLists;
 
-
+/**
+ * API class for reward methods
+ */
 @RestController
 public class RewardController {
 

@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Configuration;
 
 import rewardCentral.RewardCentral;
 
+/**
+ * Bean class to access rewardCentral library
+ */
 @Configuration
 public class RewardCentralBean {
 

@@ -6,7 +6,10 @@ import tripmaster.common.attraction.AttractionData;
 import tripmaster.common.location.VisitedLocationData;
 import tripmaster.common.user.User;
 
-
+/**
+ * Interface for reward services
+ * @see tripmaster.reward.RewardServiceImpl
+ */
 public interface RewardService {
 
 	void setProximityMaximalDistance(int proximityBuffer);

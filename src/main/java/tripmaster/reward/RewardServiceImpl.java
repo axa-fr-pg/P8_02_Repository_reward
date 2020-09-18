@@ -16,6 +16,10 @@ import tripmaster.common.location.VisitedLocationData;
 import tripmaster.common.user.User;
 import tripmaster.common.user.UserReward;
 
+/**
+ * Class for reward services. Implements RewardService interface.
+ * @see tripmaster.reward.RewardService
+ */
 @Service
 public class RewardServiceImpl implements RewardService {
     private static final int NUMBER_OF_EXPECTED_USER_PARTITIONS = 25;
@@ -28,16 +32,34 @@ public class RewardServiceImpl implements RewardService {
 	
 	@Autowired private RewardCentral rewardCentral;
 	
+	/**
+	 * Sets the maximal proximity distance used by the nearAttraction method.
+	 * @param proximityBuffer the new maximal distance to be considered as within the proximity range.
+	 * @see tripmaster.reward.RewardServiceImpl.nearAttraction
+	 */
 	@Override
 	public void setProximityMaximalDistance(int proximityBuffer) {
 		this.proximityMaximalDistance = proximityBuffer;
 	}
 	
+	/**
+	 * Gets the maximal proximity distance used by the nearAttraction method.
+	 * @return int the current maximal distance to be considered as within the proximity range.
+	 * @see tripmaster.reward.RewardServiceImpl.nearAttraction
+	 */
 	@Override
 	public int getProximityMaximalDistance() {
 		return this.proximityMaximalDistance;
 	}
 	
+	/**
+	 * Assesses whether a visited location is within the proxility range of an attraction.
+	 * @param visitedLocation the user location to be assessed
+	 * @param attractionData the attraction location to be assessed
+	 * @return boolean true if both locations have a distance lower or equal to the maximal proximity distance. False otherwise.
+	 * @see tripmaster.reward.RewardServiceImpl.getProximityMaximalDistance
+	 * @see tripmaster.reward.RewardServiceImpl.setProximityMaximalDistance
+	 */
 	@Override
 	public boolean nearAttraction(VisitedLocationData visitedLocation, AttractionData attractionData) {
 		logger.debug("nearAttraction " + attractionData.name);
@@ -48,6 +70,13 @@ public class RewardServiceImpl implements RewardService {
 		return true;
 	}
 	
+	/**
+	 * Gets the number of a reward points for a given attraction & user pair. 
+	 * @param user for which the points shall be calculated
+	 * @param attractionData for which the points shall be calculated
+	 * @return boolean true if both locations have a distance lower or equal to the maximal proximity distance. False otherwise.
+	 * @see rewardCentral.getAttractionRewardPoints
+	 */
 	@Override
 	public int getRewardPoints(AttractionData attractionData, User user) {
 		logger.debug("getRewardPoints userName = " + user.userName + " for attraction " + attractionData.name );
@@ -55,6 +84,11 @@ public class RewardServiceImpl implements RewardService {
 		return points;
 	}
 	
+	/**
+	 * Adds a new reward to the user reward list for each given attraction (if not already rewarded). 
+	 * @param user for which the rewards shall be added.
+	 * @param attractions list of AttractionData for which a reward shall be added (if not already done for this user).
+	 */
 	@Override
 	public void addAllNewRewards(User user, List<AttractionData> attractions)	{
 		logger.debug("addAllNewRewards userName = " + user.userName 
@@ -74,6 +108,7 @@ public class RewardServiceImpl implements RewardService {
 		}
 	}
 	
+	// For performance reasons it is required to split users for submission on several threads
 	private List<List<User>> divideUserList(List<User> userList) {
 		List<List<User>> partitionList = new LinkedList<List<User>>();
 		int expectedSize = userList.size() / NUMBER_OF_EXPECTED_USER_PARTITIONS;
@@ -87,10 +122,18 @@ public class RewardServiceImpl implements RewardService {
 		return partitionList;
 	}
 	
+	/**
+	 * Adds new rewards to all users reward lists for each given attraction (if not already rewarded for a given user). 
+	 * @param userList for which the rewards shall be added.
+	 * @param attractions list of AttractionData for which a reward shall be added (if not already done for a given user).
+	 * @return List of users updated with added rewards.
+	 * @see tripmaster.reward.RewardServiceImpl.addAllNewRewards
+	 */
 	@Override
 	public List<User> addAllNewRewardsAllUsers(List<User> userList, List<AttractionData> attractions)	{
 		logger.debug("addAllNewRewardsAllUsers userListName of size = " + userList.size() 
 			+ " and attractionList of size " + attractions.size());
+		// The number of threads has been defined after several tests to match the performance target
 		ForkJoinPool forkJoinPool = new ForkJoinPool(THREAD_POOL_SIZE);
 		// Divide user list into several parts and submit work separately for these parts
 		divideUserList(userList).stream().parallel().forEach( partition -> {
@@ -109,6 +152,11 @@ public class RewardServiceImpl implements RewardService {
 		return userList;
 	}
 	
+	/**
+	 * Calculates the number of reward points for a given user.
+	 * @param user for which the calculation shall be done.
+	 * @return int number of points.
+	 */
 	@Override
 	public int sumOfAllRewardPoints(User user) {
 		logger.debug("sumOfAllRewardPoints userName = " + user.userName) ;
