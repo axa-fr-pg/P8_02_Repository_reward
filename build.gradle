@@ -51,3 +51,41 @@ bootJar {
     version =  '1.0.0'
 	mainClassName = 'tripmaster.reward.Application'
 }
+
+version='1.0.0'
+
+bootJar {
+    baseName = "${project.name}"
+    version =  "${project.version}"
+	mainClassName = "tripmaster.${project.name}.Application"
+}
+
+task dockerJar {
+	delete 'docker/${project.name}.jar'
+	doLast {
+		copy {
+	        from "build/libs/${project.name}-${project.version}.jar"
+		    rename "${project.name}-${project.version}.jar", "${project.name}.jar"
+	        into 'docker'
+    	}
+    }
+	dependsOn bootJar
+}
+
+task dockerBuildImage(type:Exec) {
+	workingDir "${projectDir}/docker"
+    commandLine "docker", "build", "-t", "${project.name}", "."
+	dependsOn dockerJar
+}
+task saveDockerImage(type:Exec) {
+	group = 'tripmaster'
+	doFirst {
+	    workingDir "${projectDir}/docker"
+	    standardOutput new FileOutputStream("${projectDir}/docker/${project.name}.tar")
+	}
+    commandLine "docker", "save", "${project.name}"
+    doLast {
+    	commandLine "docker", "image", "rm", "${project.name}", "-f"
+    }
+	dependsOn dockerBuildImage
+}
