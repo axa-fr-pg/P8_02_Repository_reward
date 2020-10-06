@@ -22,7 +22,7 @@ import tripmaster.common.user.UserReward;
  */
 @Service
 public class RewardServiceImpl implements RewardService {
-    private static final int NUMBER_OF_EXPECTED_USER_PARTITIONS = 25;
+    private static final int NUMBER_OF_EXPECTED_USER_PARTITIONS = 100;
     private static final int THREAD_POOL_SIZE = NUMBER_OF_EXPECTED_USER_PARTITIONS * 2;
     
     private static final int DEFAULT_PROXIMITY_MAXIMAL_DISTANCE = 10;
