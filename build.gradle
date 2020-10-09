@@ -77,15 +77,21 @@ task dockerBuildImage(type:Exec) {
     commandLine "docker", "build", "-t", "${project.name}", "."
 	dependsOn dockerJar
 }
+task unloadDockerImage(type:Exec) {
+   	commandLine "docker", "image", "rm", "${project.name}", "-f"
+}
+task zipDockerImage(type:Exec) {
+	workingDir "${projectDir}/docker"
+   	commandLine "7z", "a", "${project.name}.zip", "${project.name}.tar"
+}
 task saveDockerImage(type:Exec) {
 	group = 'tripmaster'
+	dependsOn dockerBuildImage
 	doFirst {
 	    workingDir "${projectDir}/docker"
 	    standardOutput new FileOutputStream("${projectDir}/docker/${project.name}.tar")
 	}
     commandLine "docker", "save", "${project.name}"
-    doLast {
-    	commandLine "docker", "image", "rm", "${project.name}", "-f"
-    }
-	dependsOn dockerBuildImage
+    finalizedBy zipDockerImage
+    finalizedBy unloadDockerImage
 }
